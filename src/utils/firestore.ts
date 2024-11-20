@@ -2,11 +2,14 @@ import { auth, db } from "./firebase";
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, Timestamp } from "firebase/firestore";
 
 // interface data
-export interface Todo {
+export interface Balapan {
   id?: string;
   title: string;
   description: string;
   status: boolean;
+  startDate: string;
+  endDate: string;
+  trackDetails: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -14,71 +17,71 @@ export interface Todo {
 // operasi CRUD
 export const firestoreService = {
   // get collection ref
-  getTodoRef() {
+  getBalapanRef() {
     const uid = auth.currentUser?.uid;
     if (!uid) throw new Error("User not authenticated");
-    return collection(db, "users", uid, "todos");
+    return collection(db, "users", uid, "balapans");
   },
 
   // create
-  async addTodo(todo: Omit<Todo, "id">) {
+  async addBalapan(balapan: Omit<Balapan, "id" | "createdAt" | "updatedAt">) {
     try {
-      const todoRef = this.getTodoRef();
-      const docRef = await addDoc(todoRef, {
-        ...todo,
+      const balapanRef = this.getBalapanRef();
+      const docRef = await addDoc(balapanRef, {
+        ...balapan,
         status: false,
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
       });
       return docRef.id;
     } catch (error) {
-      console.error("Error Tambah Todo:", error);
+      console.error("Error Tambah Balapan:", error);
       throw error;
     }
   },
 
   // read
-  async getTodos(): Promise<Todo[]> {
+  async getBalapans(): Promise<Balapan[]> {
     try {
-      const todoRef = this.getTodoRef();
-      const q = query(todoRef, orderBy("updatedAt", "desc"));
+      const balapanRef = this.getBalapanRef();
+      const q = query(balapanRef, orderBy("updatedAt", "desc"));
       const snapshot = await getDocs(q);
       return snapshot.docs.map(
         (doc) =>
           ({
             id: doc.id,
             ...doc.data(),
-          } as Todo)
+          } as Balapan)
       );
     } catch (error) {
-      console.error("Error Get Todos:", error);
+      console.error("Error Get Balapans:", error);
       throw error;
     }
   },
 
   // update
-  async updateTodo(id: string, todo: Partial<Todo>) {
+  async updateBalapan(id: string, balapan: Partial<Balapan>) {
     try {
-      const todoRef = this.getTodoRef();
-      const docRef = doc(todoRef, id);
+      const balapanRef = this.getBalapanRef();
+      const docRef = doc(balapanRef, id);
       await updateDoc(docRef, {
-        ...todo,
+        ...balapan,
         updatedAt: Timestamp.now(),
       });
     } catch (error) {
-      console.error("Error Update Todo:", error);
+      console.error("Error Update Balapan:", error);
       throw error;
     }
   },
 
   // delete
-  async deleteTodo(id: string) {
+  async deleteBalapan(id: string) {
     try {
-      const todoRef = this.getTodoRef();
-      const docRef = doc(todoRef, id);
+      const balapanRef = this.getBalapanRef();
+      const docRef = doc(balapanRef, id);
       await deleteDoc(docRef);
     } catch (error) {
-      console.error("Error Delete Todo:", error);
+      console.error("Error Delete Balapan:", error);
       throw error;
     }
   },
@@ -86,8 +89,8 @@ export const firestoreService = {
   // update status
   async updateStatus(id: string, status: boolean) {
     try {
-      const todoRef = this.getTodoRef();
-      const docRef = doc(todoRef, id);
+      const balapanRef = this.getBalapanRef();
+      const docRef = doc(balapanRef, id);
       await updateDoc(docRef, { status: status, updatedAt: Timestamp.now() });
     } catch (error) {
       console.error("Error Update Status:", error);

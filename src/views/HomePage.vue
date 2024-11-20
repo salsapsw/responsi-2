@@ -16,12 +16,12 @@
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
 
-      <!-- active todos -->
+      <!-- active balapans -->
       <div class="scrollable-container">
         <ion-list>
-          <ion-item-sliding v-for="todo in activeTodos" :key="todo.id" :ref="(el) => setItemRef(el, todo.id!)">
-            <ion-item-options side="start" @ionSwipe="handleDelete(todo)">
-              <ion-item-option color="danger" expandable @click="handleDelete(todo)">
+          <ion-item-sliding v-for="balapan in activeBalapans" :key="balapan.id" :ref="(el) => setItemRef(el, balapan.id!)">
+            <ion-item-options side="start" @ionSwipe="handleDelete(balapan)">
+              <ion-item-option color="danger" expandable @click="handleDelete(balapan)">
                 <ion-icon slot="icon-only" :icon="trash" size="large"></ion-icon>
               </ion-item-option>
             </ion-item-options>
@@ -29,32 +29,32 @@
             <ion-item>
               <ion-card>
                 <ion-card-header>
-                  <ion-card-title class="ion-text-wrap limited-text">{{ todo.title }}</ion-card-title>
-                  <ion-card-subtitle class="limited-text">{{ todo.description }}</ion-card-subtitle>
+                  <ion-card-title class="ion-text-wrap limited-text">{{ balapan.title }}</ion-card-title>
+                  <ion-card-subtitle class="limited-text">{{ balapan.description }}</ion-card-subtitle>
                 </ion-card-header>
 
                 <ion-card-content>
-                  <ion-badge>{{ getRelativeTime(todo.updatedAt) }}</ion-badge>
+                  <ion-badge>{{ getRelativeTime(balapan.updatedAt) }}</ion-badge>
                 </ion-card-content>
               </ion-card>
             </ion-item>
 
-            <ion-item-options side="end" @ionSwipe="handleStatus(todo)">
-              <ion-item-option @click="handleEdit(todo)">
+            <ion-item-options side="end" @ionSwipe="handleStatus(balapan)">
+              <ion-item-option @click="handleEdit(balapan)">
                 <ion-icon slot="icon-only" :icon="create" size="large"></ion-icon>
               </ion-item-option>
-              <ion-item-option color="success" expandable @click="handleStatus(todo)">
+              <ion-item-option color="success" expandable @click="handleStatus(balapan)">
                 <ion-icon slot="icon-only" :icon="checkmarkCircle" color="light" size="large"></ion-icon>
               </ion-item-option>
             </ion-item-options>
           </ion-item-sliding>
-          <ion-item v-if="activeTodos.length === 0" class="ion-text-center">
-            <ion-label>No active todos</ion-label>
+          <ion-item v-if="activeBalapans.length === 0" class="ion-text-center">
+            <ion-label>No active balapans</ion-label>
           </ion-item>
         </ion-list>
       </div>
 
-      <!-- completed todos -->
+      <!-- completed balapans -->
       <ion-item class="accordion-container">
         <ion-accordion-group>
           <ion-accordion value="first">
@@ -63,9 +63,9 @@
             </ion-item>
             <div slot="content" class="scrollable-container">
               <ion-list>
-                <ion-item-sliding v-for="todo in completedTodos" :key="todo.id" :ref="(el) => setItemRef(el, todo.id!)">
-                  <ion-item-options side="start" @ionSwipe="handleDelete(todo)">
-                    <ion-item-option color="danger" expandable @click="handleDelete(todo)">
+                <ion-item-sliding v-for="balapan in completedBalapans" :key="balapan.id" :ref="(el) => setItemRef(el, balapan.id!)">
+                  <ion-item-options side="start" @ionSwipe="handleDelete(balapan)">
+                    <ion-item-option color="danger" expandable @click="handleDelete(balapan)">
                       <ion-icon slot="icon-only" :icon="trash" size="large"></ion-icon>
                     </ion-item-option>
                   </ion-item-options>
@@ -73,27 +73,28 @@
                   <ion-item>
                     <ion-card>
                       <ion-card-header>
-                        <ion-card-title class="ion-text-wrap limited-text">{{ todo.title }}</ion-card-title>
-                        <ion-card-subtitle class="limited-text">{{ todo.description }}</ion-card-subtitle>
+                        <ion-card-title class="ion-text-wrap limited-text">{{ balapan.title }}</ion-card-title>
+                        <ion-card-subtitle class="limited-text">{{ balapan.description }}</ion-card-subtitle>
                       </ion-card-header>
 
                       <ion-card-content>
-                        <ion-badge>{{ getRelativeTime(todo.updatedAt) }}</ion-badge>
+                        <p class="limited-text">{{ balapan.trackDetails }}</p>
+                        <ion-badge>{{ getRelativeTime(balapan.updatedAt) }}</ion-badge>
                       </ion-card-content>
                     </ion-card>
                   </ion-item>
 
-                  <ion-item-options side="end" @ionSwipe="handleStatus(todo)">
-                    <ion-item-option @click="handleEdit(todo)">
+                  <ion-item-options side="end" @ionSwipe="handleStatus(balapan)">
+                    <ion-item-option @click="handleEdit(balapan)">
                       <ion-icon slot="icon-only" :icon="create" size="large"></ion-icon>
                     </ion-item-option>
-                    <ion-item-option color="warning" expandable @click="handleStatus(todo)">
+                    <ion-item-option color="warning" expandable @click="handleStatus(balapan)">
                       <ion-icon slot="icon-only" :icon="close" color="light" size="large"></ion-icon>
                     </ion-item-option>
                   </ion-item-options>
                 </ion-item-sliding>
-                <ion-item v-if="completedTodos.length === 0" class="ion-text-center">
-                  <ion-label>No completed todos</ion-label>
+                <ion-item v-if="completedBalapans.length === 0" class="ion-text-center">
+                  <ion-label>No completed balapans</ion-label>
                 </ion-item>
               </ion-list>
             </div>
@@ -101,13 +102,13 @@
         </ion-accordion-group>
       </ion-item>
 
-      <!-- komponen paling bawah dari ion-content -->
+      <!-- untuk menambahkan nama balapan -->
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button @click="isOpen = true">
           <ion-icon :icon="add" size="large"></ion-icon>
         </ion-fab-button>
       </ion-fab>
-      <InputModal v-model:isOpen="isOpen" v-model:editingId="editingId" :todo="todo" @submit="handleSubmit" />
+      <InputModal v-model:isOpen="isOpen" v-model:editingId="editingId" :balapan="balapan" @submit="handleSubmit" />
     </ion-content>
   </ion-page>
 </template>
@@ -115,13 +116,16 @@
 <script setup lang="ts">
 const isOpen = ref(false);
 const editingId = ref<string | null>(null);
-const todos = ref<Todo[]>([]);
-const todo = ref<Omit<Todo, "id" | "createdAt" | "updatedAt" | "status">>({
+const balapans = ref<Balapan[]>([]);
+const balapan = ref<Omit<Balapan, "id" | "createdAt" | "updatedAt" | "status">>({
   title: "",
   description: "",
+  startDate: "",
+  endDate: "",
+  trackDetails: "",
 });
-const activeTodos = computed(() => todos.value.filter((todo) => !todo.status));
-const completedTodos = computed(() => todos.value.filter((todo) => todo.status));
+const activeBalapans = computed(() => balapans.value.filter((balapan) => !balapan.status));
+const completedBalapans = computed(() => balapans.value.filter((balapan) => balapan.status));
 const itemRefs = ref<Map<string, HTMLIonItemSlidingElement>>(new Map());
 let intervalId: any;
 const timeUpdateTrigger = ref(0);
@@ -159,7 +163,7 @@ const getRelativeTime = (date: any) => {
 // fungsi handleRefresh dan handleSubmit akan didefinisikan nanti
 const handleRefresh = async (event: any) => {
   try {
-    await loadTodos(false);
+    await loadBalapans(false);
   } catch (error) {
     console.error("Error refreshing:", error);
   } finally {
@@ -167,20 +171,20 @@ const handleRefresh = async (event: any) => {
   }
 };
 
-const handleSubmit = async (todo: Omit<Todo, "id" | "createdAt" | "updatedAt" | "status">) => {
-  if (!todo.title) {
+const handleSubmit = async (balapan: Omit<Balapan, "id" | "createdAt" | "updatedAt" | "status">) => {
+  if (!balapan.title) {
     await showToast("Title is required", "warning", warningOutline);
     return;
   }
   try {
     if (editingId.value) {
-      await firestoreService.updateTodo(editingId.value, todo as Todo);
-      await showToast("Todo updated successfully", "success", checkmarkCircle);
+      await firestoreService.updateBalapan(editingId.value, balapan as Balapan);
+      await showToast("Balapan updated successfully", "success", checkmarkCircle);
     } else {
-      await firestoreService.addTodo(todo as Todo);
-      await showToast("Todo added successfully", "success", checkmarkCircle);
+      await firestoreService.addBalapan(balapan as Balapan);
+      await showToast("Balapan added successfully", "success", checkmarkCircle);
     }
-    loadTodos();
+    loadBalapans();
   } catch (error) {
     await showToast("An error occurred", "danger", closeCircle);
     console.error(error);
@@ -190,7 +194,7 @@ const handleSubmit = async (todo: Omit<Todo, "id" | "createdAt" | "updatedAt" | 
 };
 
 // load data
-const loadTodos = async (isLoading = true) => {
+const loadBalapans = async (isLoading = true) => {
   let loading;
   if (isLoading) {
     loading = await loadingController.create({
@@ -200,7 +204,7 @@ const loadTodos = async (isLoading = true) => {
   }
 
   try {
-    todos.value = await firestoreService.getTodos();
+    balapans.value = await firestoreService.getBalapans();
   } catch (error) {
     console.error(error);
   } finally {
@@ -210,38 +214,41 @@ const loadTodos = async (isLoading = true) => {
   }
 };
 
-const handleEdit = async (editTodo: Todo) => {
-  const slidingItem = itemRefs.value.get(editTodo.id!);
+const handleEdit = async (editBalapan: Balapan) => {
+  const slidingItem = itemRefs.value.get(editBalapan.id!);
   await slidingItem?.close();
 
-  editingId.value = editTodo.id!;
-  todo.value = {
-    title: editTodo.title,
-    description: editTodo.description,
+  editingId.value = editBalapan.id!;
+  balapan.value = {
+    title: editBalapan.title,
+    description: editBalapan.description,
+    trackDetails: editBalapan.trackDetails,
+    startDate: editBalapan.startDate,
+    endDate: editBalapan.endDate,
   };
   isOpen.value = true;
 };
 
 // handle delete click/swipe
-const handleDelete = async (deleteTodo: Todo) => {
+const handleDelete = async (deleteBalapan: Balapan) => {
   try {
-    await firestoreService.deleteTodo(deleteTodo.id!);
-    await showToast("Todo deleted successfully", "success", checkmarkCircle);
-    loadTodos();
+    await firestoreService.deleteBalapan(deleteBalapan.id!);
+    await showToast("Balapan deleted successfully", "success", checkmarkCircle);
+    loadBalapans();
   } catch (error) {
-    await showToast("Failed to delete todo", "danger", closeCircle);
+    await showToast("Failed to delete Balapan", "danger", closeCircle);
     console.error(error);
   }
 };
 
-// handle status click/swipe, mengubah status todo active (false)/completed (true)
-const handleStatus = async (statusTodo: Todo) => {
-  const slidingItem = itemRefs.value.get(statusTodo.id!);
+// handle status click/swipe, mengubah status Balapan active (false)/completed (true)
+const handleStatus = async (statusBalapan: Balapan) => {
+  const slidingItem = itemRefs.value.get(statusBalapan.id!);
   await slidingItem?.close();
   try {
-    await firestoreService.updateStatus(statusTodo.id!, !statusTodo.status);
-    await showToast(`Todo marked as ${!statusTodo.status ? "completed" : "active"}`, "success", checkmarkCircle);
-    loadTodos();
+    await firestoreService.updateStatus(statusBalapan.id!, !statusBalapan.status);
+    await showToast(`Balapan marked as ${!statusBalapan.status ? "completed" : "active"}`, "success", checkmarkCircle);
+    loadBalapans();
   } catch (error) {
     await showToast("Failed to update status", "danger", closeCircle);
     console.error(error);
@@ -250,7 +257,7 @@ const handleStatus = async (statusTodo: Todo) => {
 
 // dijalankan setiap halaman diload, load data dan set interval update 1 menit
 onMounted(() => {
-  loadTodos();
+  loadBalapans();
   intervalId = setInterval(() => {
     timeUpdateTrigger.value++;
   }, 60000);
@@ -292,7 +299,7 @@ import {
 import { add, checkmarkCircle, close, create, trash, closeCircle, warningOutline } from "ionicons/icons";
 import InputModal from "@/components/InputModal.vue";
 import { onMounted, ref, computed, onUnmounted } from "vue";
-import { firestoreService, type Todo } from "@/utils/firestore";
+import { firestoreService, type Balapan } from "@/utils/firestore";
 import { formatDistanceToNow } from "date-fns";
 // import TabsMenu from "@/components/TabsMenu.vue";
 </script>
