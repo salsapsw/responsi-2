@@ -69,14 +69,16 @@ const input = () => {
       <ion-item>
         <ion-textarea v-model="balapan.description" label="Description" label-placement="floating" placeholder="Enter Description" :autogrow="true" :rows="3"></ion-textarea>
       </ion-item>
+      <!-- Mengganti ion-input menjadi ion-datetime untuk startDate -->
       <ion-item>
-        <ion-input v-model="balapan.startDate" label="StartDate" label-placement="floating" placeholder="Enter Start Date" :autogrow="true" :rows="3"></ion-input>
+        <ion-datetime v-model="balapan.startDate" label="Start Date" label-placement="floating"></ion-datetime>
+      </ion-item>
+      <!-- Mengganti ion-input menjadi ion-datetime untuk endDate -->
+      <ion-item>
+        <ion-datetime v-model="balapan.endDate" label="End Date" label-placement="floating"></ion-datetime>
       </ion-item>
       <ion-item>
-        <ion-input v-model="balapan.endDate" label="EndDate" label-placement="floating" placeholder="Enter End Date" :autogrow="true" :rows="3"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input v-model="balapan.trackDetails" label="TrackDetails" label-placement="floating" placeholder="Enter Track Details"></ion-input>
+        <ion-input v-model="balapan.trackDetails" label="Track Details" label-placement="floating" placeholder="Enter Track Details"></ion-input>
       </ion-item>
       <ion-row>
         <ion-col>

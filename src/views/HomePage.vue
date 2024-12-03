@@ -6,10 +6,6 @@
       </ion-toolbar>
     </ion-header>
 
-    <!-- <ion-content :fullscreen="true"> -->
-    <!-- <div></div> -->
-    <!-- <TabsMenu /> -->
-    <!-- </ion-content> -->
     <ion-content :fullscreen="true">
       <!-- komponen paling atas dari ion-content -->
       <ion-refresher slot="fixed" :pull-factor="0.5" :pull-min="100" :pull-max="200" @ionRefresh="handleRefresh($event)">
@@ -34,6 +30,9 @@
                 </ion-card-header>
 
                 <ion-card-content>
+                  <p class="limited-text">Start Date: {{ new Date(balapan.startDate).toLocaleString() }}</p>
+                  <p class="limited-text">End Date: {{ new Date(balapan.endDate).toLocaleString() }}</p>
+                  <p class="limited-text">Track Details: {{ balapan.trackDetails }}</p>
                   <ion-badge>{{ getRelativeTime(balapan.updatedAt) }}</ion-badge>
                 </ion-card-content>
               </ion-card>
@@ -78,7 +77,9 @@
                       </ion-card-header>
 
                       <ion-card-content>
-                        <p class="limited-text">{{ balapan.trackDetails }}</p>
+                        <p class="limited-text">Start Date: {{ new Date(balapan.startDate).toLocaleString() }}</p>
+                        <p class="limited-text">End Date: {{ new Date(balapan.endDate).toLocaleString() }}</p>
+                        <p class="limited-text">Track Details: {{ balapan.trackDetails }}</p>
                         <ion-badge>{{ getRelativeTime(balapan.updatedAt) }}</ion-badge>
                       </ion-card-content>
                     </ion-card>
