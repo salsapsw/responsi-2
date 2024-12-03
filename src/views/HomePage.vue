@@ -179,10 +179,10 @@ const handleSubmit = async (balapan: Omit<Balapan, "id" | "createdAt" | "updated
   try {
     if (editingId.value) {
       await firestoreService.updateBalapan(editingId.value, balapan as Balapan);
-      await showToast("Balapan updated successfully", "success", checkmarkCircle);
+      await showToast("Balapan berhasil ditambahkan", "success", checkmarkCircle);
     } else {
       await firestoreService.addBalapan(balapan as Balapan);
-      await showToast("Balapan added successfully", "success", checkmarkCircle);
+      await showToast("Balapan berhasil ditambahkan", "success", checkmarkCircle);
     }
     loadBalapans();
   } catch (error) {
